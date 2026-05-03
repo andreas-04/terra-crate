@@ -283,7 +283,7 @@ def generate_crl(ca_cert_path, ca_key_path, revoked_entries):
     builder = x509.CertificateRevocationListBuilder()
     builder = builder.issuer_name(ca_cert.subject)
     builder = builder.last_update(datetime.now(UTC))
-    builder = builder.next_update(datetime.now(UTC) + timedelta(days=7))
+    builder = builder.next_update(datetime.now(UTC) + timedelta(days=30))
 
     for entry in revoked_entries:
         revoked = (

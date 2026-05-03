@@ -2651,7 +2651,7 @@ CERT_EXPIRY_CHECK_INTERVAL_HOURS = int(os.getenv("CERT_EXPIRY_CHECK_INTERVAL_HOU
 
 
 def _check_expiring_certs():
-    """Revoke certs nearing expiry and notify users."""
+    """Revoke certs nearing expiry, notify users, and refresh the CRL."""
     import logging
 
     logger = logging.getLogger(__name__)
@@ -2664,23 +2664,25 @@ def _check_expiring_certs():
             User.cert_serial_number.isnot(None),
         ).all()
 
-        if not expiring:
-            return
+        if expiring:
+            from models import SystemSettings
 
-        from models import SystemSettings
+            settings = SystemSettings.query.first()
 
-        settings = SystemSettings.query.first()
+            for user in expiring:
+                logger.info("Auto-revoking expiring cert for %s (expires %s)", user.email, user.cert_expires_at)
+                _revoke_user_cert(user, "expiry_approaching")
+                if settings and settings.smtp_enabled:
+                    send_revocation_email(
+                        user.email,
+                        settings.device_name or "TerraCrate",
+                        settings,
+                        reason="Your certificate is expiring soon.",
+                    )
 
-        for user in expiring:
-            logger.info("Auto-revoking expiring cert for %s (expires %s)", user.email, user.cert_expires_at)
-            _revoke_user_cert(user, "expiry_approaching")
-            if settings and settings.smtp_enabled:
-                send_revocation_email(
-                    user.email,
-                    settings.device_name or "TerraCrate",
-                    settings,
-                    reason="Your certificate is expiring soon.",
-                )
+        # Always rebuild the CRL so next_update stays fresh and nginx never
+        # rejects clients due to a stale (expired) CRL.
+        _rebuild_crl()
 
 
 def _start_cert_expiry_checker():
