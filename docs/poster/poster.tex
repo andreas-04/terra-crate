@@ -62,7 +62,7 @@
 \newcommand{\pillhead}[1]{%
   \tikz[baseline=(n.base)]\node[
     fill=uiblack,
-    rounded corners=0pt,
+    rounded corners=20pt,
     inner xsep=24pt,
     inner ysep=12pt,
   ](n){\textcolor{uigold}{\fontsize{42}{50}\selectfont\bfseries #1}};%
@@ -131,29 +131,26 @@
 \end{textblock}
 
 % -- Objective --
-\begin{textblock}{0.295}(0.02, 0.265)
+\begin{textblock}{0.295}(0.02, 0.271)
   \setlength{\baselineskip}{28pt}\setlength{\parskip}{6pt}%
   \pillhead{Objective}\vspace{18pt}\par
   {\fontsize{28}{36}\selectfont\setlength{\baselineskip}{38pt}%
-    Build a portable, self-hosted file server on a Raspberry Pi that provides secure
-    multi-user file sharing with mTLS authentication, three-tier permissions, and mDNS
-    discovery, deployable in any environment without cloud infrastructure or client
-    software beyond a browser.\par}
+    Build a portable Raspberry Pi file server with mTLS authentication, flexible permissions, and mDNS discovery. Deployable anywhere without cloud infrastructure or client software beyond a browser.\par}
 \end{textblock}
 
 % -- Problem Definition --
-\begin{textblock}{0.295}(0.02, 0.41)
+\begin{textblock}{0.295}(0.02, 0.39)
   \setlength{\baselineskip}{28pt}\setlength{\parskip}{6pt}%
   \pillhead{Problem Definition}\vspace{18pt}\par
   {\fontsize{28}{36}\selectfont\setlength{\baselineskip}{38pt}%
-    Pocket-sized, self-contained file storage with certificate-based access. Plug in, sign up, and your certificate arrives by email. Unplug to take your data. No cloud, no residue.\par}
+    There is no lightweight, portable and secure file sharing solution that provides multi-user access without external dependencies.\par}
 \end{textblock}
 
 % -- guest image --
-\begin{textblock}{0.295}(0.02, 0.52)
+\begin{textblock}{0.295}(0.02, 0.5)
   \includegraphics[width=\linewidth]{guest.png}
 \end{textblock}
-\begin{textblock}{0.295}(0.02, 0.75)
+\begin{textblock}{0.295}(0.02, 0.74)
   {\fontsize{24}{30}\selectfont\itshape\color{black} Users can browse shared files
   directly in the browser after installing their client certificate.\par}
 \end{textblock}
@@ -162,23 +159,27 @@
   \setlength{\baselineskip}{28pt}\setlength{\parskip}{6pt}%
   \pillhead{Key Requirements}\vspace{18pt}\par
   {\fontsize{28}{36}\selectfont\setlength{\baselineskip}{38pt}%
-    All traffic uses HTTPS; regular users authenticate via mTLS. The full certificate
-    lifecycle is managed on-device. A three-tier permission model covers domain, group, and per-user overrides. mDNS
-    with Wi-Fi AP fallback enables zero-config discovery. All security events are
-    logged and the system runs fully self-contained.\par}
+  \begin{itemize}\setlength{\itemsep}{6pt}
+    \item Clients must authenticate with mTLS
+    \item Full certificate lifecycle managed on-device
+    \item Flexible access control
+    \item mDNS for zero-config discovery
+    \item Fully auditable self contained system.
+  \end{itemize}}
 \end{textblock}
 
-% -- bottom-left images --
-\begin{textblock}{0.04}(0, 0.946)
+
+\begin{textblock}{0.03}(0.91, 0.1547)
   \includegraphics[width=\linewidth]{9.PNG}
 \end{textblock}
-\begin{textblock}{0.04}(0.04, 0.946)
+\begin{textblock}{0.03}(0.94, 0.1547)
   \includegraphics[width=\linewidth]{11.PNG}
 \end{textblock}
-\begin{textblock}{0.04}(0.08, 0.946)
+\begin{textblock}{0.03}(0.97, 0.1547)
   \includegraphics[width=\linewidth]{12.PNG}
+\end{textblock}\begin{textblock}{0.06}(0.125, 0.915)
+  \includegraphics[width=\linewidth]{qr-code.png}
 \end{textblock}
-
 % ==============================================================
 % COLUMN 2  (x = 0.352, width = 0.29)
 % ==============================================================
@@ -224,17 +225,18 @@ Two prior designs were evaluated: an SMB-over-mTLS approach requiring client-sid
   \setlength{\baselineskip}{28pt}\setlength{\parskip}{6pt}%
   \pillhead{Validation}\vspace{18pt}\par
   {\fontsize{28}{36}\selectfont\setlength{\baselineskip}{38pt}%
-    The backend is verified by 105 unit tests across authentication, permission resolution,
-    certificate lifecycle, and path traversal prevention. The frontend is enforced through
-    ESLint, TypeScript strict mode, and Vite builds. A three-workflow GitHub Actions
-    pipeline runs linting, type checking, all backend tests, and Docker builds on every push.\par}
+  \begin{itemize}\setlength{\itemsep}{6pt}
+    \item 105 backend unit tests: auth, permissions, certificate lifecycle, path traversal
+    \item Frontend enforced via ESLint, TypeScript strict mode, and Vite builds
+    \item Three-workflow GitHub Actions CI: lint, type-check, tests, and Docker builds on every push
+  \end{itemize}}
 \end{textblock}
 
 % -- sys-log image --
 \begin{textblock}{0.29}(0.684, 0.373)
   \includegraphics[width=\linewidth]{sys-log.png}
 \end{textblock}
-\begin{textblock}{0.29}(0.684, 0.6)
+\begin{textblock}{0.29}(0.684, 0.61)
   {\fontsize{24}{30}\selectfont\itshape\color{black} The real-time audit log captures every
   security-relevant action with timestamp, user, and outcome for auditability.\par}
 \end{textblock}
@@ -251,12 +253,12 @@ Two prior designs were evaluated: an SMB-over-mTLS approach requiring client-sid
 \end{textblock}
 
 % -- Acknowledgements --
-\begin{textblock}{0.29}(0.684, 0.85)
+\begin{textblock}{0.29}(0.684, 0.845)
   \setlength{\baselineskip}{28pt}\setlength{\parskip}{6pt}%
   \pillhead{Acknowledgements}\vspace{18pt}\par
   {\fontsize{28}{36}\selectfont\setlength{\baselineskip}{38pt}%
-    The team would like to thank Dr.\ Constantinos Kolias proposing the project and providing guidance
-    throughout the design process.\par}
+    The team would like to thank Dr.\ Constantinos Kolias for proposing the project and providing guidance
+    throughout the design process, and Dr.\ Terrance Soule for his support and guidance.\par}
 \end{textblock}
 
 \end{frame}
