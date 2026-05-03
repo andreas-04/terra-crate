@@ -1,6 +1,6 @@
-# TerraCrate File Share
+<img width="560" height="96" alt="terracrate-dark" src="https://github.com/user-attachments/assets/53240f26-19ef-42ab-9069-6626e3f46075" />
 
-TerraCrate is a self hosted file sharing NAS solution for a Raspberry Pi
+### TerraCrate is a secure, self hosted file sharing solution for a Raspberry Pi
 
 ## Quick Start
 
