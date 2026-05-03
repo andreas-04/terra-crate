@@ -140,6 +140,50 @@ else
 fi
 
 # ---------------------------------------------------------------------------
+# 1b. Install Docker Engine if not present
+# ---------------------------------------------------------------------------
+if ! command -v docker &>/dev/null; then
+    echo
+    echo "Docker not found — installing Docker Engine..."
+    apt-get update -qq
+    apt-get install -y --no-install-recommends ca-certificates curl gnupg lsb-release
+
+    install -m 0755 -d /etc/apt/keyrings
+    curl -fsSL https://download.docker.com/linux/$(. /etc/os-release && echo "$ID")/gpg \
+        | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+    chmod a+r /etc/apt/keyrings/docker.gpg
+
+    echo \
+        "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] \
+https://download.docker.com/linux/$(. /etc/os-release && echo "$ID") \
+$(lsb_release -cs) stable" \
+        > /etc/apt/sources.list.d/docker.list
+
+    apt-get update -qq
+    apt-get install -y --no-install-recommends \
+        docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+    systemctl enable docker
+    systemctl start docker
+    echo "Docker Engine installed and started"
+else
+    echo "Docker already installed ($(docker --version))"
+fi
+
+# Ensure docker-compose (plugin or standalone) is available
+if ! docker compose version &>/dev/null && ! command -v docker-compose &>/dev/null; then
+    echo "Installing docker-compose-plugin..."
+    apt-get update -qq
+    apt-get install -y --no-install-recommends docker-compose-plugin
+fi
+
+# Add the invoking user to the docker group so they don't need sudo
+if [[ -n "${SUDO_USER:-}" ]] && ! groups "$SUDO_USER" | grep -qw docker; then
+    usermod -aG docker "$SUDO_USER"
+    echo "Added '$SUDO_USER' to the docker group (re-login required)"
+fi
+
+# ---------------------------------------------------------------------------
 # 2. Install the mDNS service advertisement file
 # ---------------------------------------------------------------------------
 AVAHI_SERVICE_SRC="$SCRIPT_DIR/config/terracrate.avahi-service"
