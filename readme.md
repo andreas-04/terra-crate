@@ -31,28 +31,3 @@ Login via:
 - **password**: the `ADMIN_PIN` you set during setup
 
 You will be asked to change your password after initial login.
-
-## Customizing the mDNS Hostname
-
-By default, your device is advertised as `terracrate.local`. To use a different hostname:
-
-1. Edit `.env` in the project root and update `MDNS_HOSTNAME`:
-   ```
-   MDNS_HOSTNAME=mydevice
-   ```
-2. Update the system hostname:
-   ```bash
-   sudo hostnamectl set-hostname mydevice
-   ```
-3. Update `/etc/hosts` so that `127.0.1.1` resolves to the new hostname:
-   ```bash
-   sudo sed -i "s/127\.0\.1\.1.*/127.0.1.1\tmydevice/" /etc/hosts
-   ```
-4. Restart the services:
-   ```bash
-   sudo systemctl restart avahi-daemon
-   sudo systemctl restart terracrate
-   ```
-
-Your device will then be discoverable at `https://mydevice.local`.
-
